@@ -12,6 +12,7 @@ public class ClientApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ClientApplication.class.getResource("client-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        scene.getStylesheets().add("../resources/com.example.g12_theboringchat/client-stylesheet.css");
         stage.setTitle("Client");
         stage.setScene(scene);
         stage.show();
