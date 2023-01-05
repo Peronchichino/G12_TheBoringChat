@@ -1,0 +1,6 @@
+/* to use any css you would use for webpages u have to change it
+   to something with the -fx-whatever, its weird but doable*/
+
+.button{
+    -fx-background-color: green;
+}

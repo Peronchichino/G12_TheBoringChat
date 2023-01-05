@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="400" maxWidth="600" minHeight="400" minWidth="600" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="com.example.g12_theboringchat.ClientController" maxHeight="400" maxWidth="600" minHeight="400" minWidth="600" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Pane layoutY="-1.0" prefHeight="50.0" prefWidth="144.0" style="-fx-background-color: black;">
             <children>
@@ -20,12 +20,12 @@
                 </Label>
             </children>
         </Pane>
-        <ScrollPane id="ScrollPane_chats" layoutY="50.0" prefHeight="350.0" prefWidth="144.0" style="-fx-background-color: lightgray;" vbarPolicy="ALWAYS" />
+        <ScrollPane fx:id="ScrollPane_chats" layoutY="50.0" prefHeight="350.0" prefWidth="144.0" style="-fx-background-color: lightgray;" vbarPolicy="ALWAYS" />
         <Pane layoutX="144.0" prefHeight="400.0" prefWidth="457.0" style="-fx-background-color: lightgray;">
             <children>
-                <Button id="btn_sendMessage" layoutX="401.0" layoutY="356.0" mnemonicParsing="false" text="Send" />
-                <TextField id="txt_message" layoutX="14.0" layoutY="356.0" prefHeight="25.0" prefWidth="375.0" promptText="Enter text..." />
-                <TextArea id="txt_messageArea" prefHeight="342.0" prefWidth="458.0" />
+                <Button fx:id="btn_sendMessage" onAction="#btnSendMsg" layoutX="401.0" layoutY="356.0" text="Send"/>
+                <TextField fx:id="txt_message" layoutX="14.0" layoutY="356.0" prefHeight="25.0" prefWidth="375.0" promptText="Enter text..." />
+                <TextArea fx:id="txt_messageArea" mouseTransparent="true" prefHeight="342.0" prefWidth="458.0" />
             </children>
         </Pane>
     </children>
