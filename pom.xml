@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.g12_theboringchat/com.example.g12_theboringchat.HelloApplication
+                            <mainClass>com.example.g12_theboringchat/com.example.g12_theboringchat.ClientApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
