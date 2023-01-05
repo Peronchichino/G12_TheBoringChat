@@ -1,6 +1,36 @@
 /* to use any css you would use for webpages u have to change it
    to something with the -fx-whatever, its weird but doable*/
 
+/*Color palette
+    background: #23272a (dark)
+    background 2: #2c2f33 (not as dark)
+    fine details: #23272A (very dark)
+    light gray: #99AAb5
+    darker light gray: #646464
+    text: #ffffff (white)
+    blueish: #5865F2
+    green: #57F287
+ */
+
 .button{
-    -fx-background-color: green;
+    -fx-background-color: #646464;
+    -fx-background-radius: 100%;
+    -fx-min-height: 30px;
+    -fx-min-width: 30px;
+    -fx-max-height: 30px;
+    -fx-max-width: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+#msg_btn_cont{
+    -fx-background-color: #2c2f33;
+}
+
+#txt_message{
+    -fx-background-color: #ffffff;
+}
+
+#txt_messageArea{
+    -fx-background-color: #ffffff;
+
 }

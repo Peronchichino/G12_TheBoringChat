@@ -1,31 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:controller="com.example.g12_theboringchat.ClientController" maxHeight="400" maxWidth="600" minHeight="400" minWidth="600" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="600" maxWidth="750" minHeight="600" minWidth="750" prefHeight="600.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.g12_theboringchat.ClientController">
     <children>
-        <Pane layoutY="-1.0" prefHeight="50.0" prefWidth="144.0" style="-fx-background-color: black;">
+        <ScrollPane fx:id="ScrollPane_chats" hmax="800.0" hvalue="800.0" layoutY="3.0" prefHeight="593.0" prefWidth="186.0" style="-fx-background-color: lightgray;" vbarPolicy="ALWAYS" vmax="300.0" vvalue="300.0" />
+        <Pane fx:id="msg_btn_cont" layoutX="187.0" prefHeight="600.0" prefWidth="565.0">
             <children>
-                <Label layoutX="22.0" layoutY="15.0" style="-fx-font-weight: bold;" text="The Boring Chat" textAlignment="CENTER" textFill="WHITE">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Label>
-            </children>
-        </Pane>
-        <ScrollPane fx:id="ScrollPane_chats" layoutY="50.0" prefHeight="350.0" prefWidth="144.0" style="-fx-background-color: lightgray;" vbarPolicy="ALWAYS" />
-        <Pane layoutX="144.0" prefHeight="400.0" prefWidth="457.0" style="-fx-background-color: lightgray;">
-            <children>
-                <Button fx:id="btn_sendMessage" onAction="#btnSendMsg" layoutX="401.0" layoutY="356.0" text="Send"/>
-                <TextField fx:id="txt_message" layoutX="14.0" layoutY="356.0" prefHeight="25.0" prefWidth="375.0" promptText="Enter text..." />
-                <TextArea fx:id="txt_messageArea" mouseTransparent="true" prefHeight="342.0" prefWidth="458.0" />
+                <Button fx:id="btn_sendMessage" layoutX="513.0" layoutY="561.0" onAction="#btnSendMsg" text="&gt;" />
+                <TextField fx:id="txt_message" layoutX="11.0" layoutY="561.0" prefHeight="25.0" prefWidth="486.0" promptText="Enter text..." />
+                <TextArea fx:id="txt_messageArea" layoutX="-3.0" mouseTransparent="true" prefHeight="549.0" prefWidth="566.0" />
             </children>
         </Pane>
     </children>

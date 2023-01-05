@@ -21,11 +21,12 @@ public class ClientController{
     @FXML
     TextArea txt_messageArea;
 
-    private String msg = "fuck";
 
     public void btnSendMsg(ActionEvent event){
-        String message = txt_message.getText();
-        txt_message.setText("");
-        txt_messageArea.appendText(message+"\n");
+        if(txt_message.getText() != null){
+            String message = txt_message.getText();
+            txt_message.setText("");
+            txt_messageArea.appendText(message+"\n");
+        }
     }
 }
