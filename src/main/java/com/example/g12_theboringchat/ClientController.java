@@ -1,14 +1,17 @@
 package com.example.g12_theboringchat;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 
-public class ClientController {
+public class ClientController{
     @FXML
-    private Label welcomeText;
+    private Button btn_sendMessage;
+    @FXML
+    private ScrollPane ScrollPane_chats;
+    @FXML
+    private TextField txt_message;
+    @FXML
+    TextArea txt_messageArea;
 
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
+
 }

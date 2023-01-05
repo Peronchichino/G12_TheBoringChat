@@ -36,7 +36,7 @@ public class Server implements Runnable{
                 threadpool.execute(handler); //threadpool instead of individual threads to make it easier cause of frequent connections
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) { //should shutdown no matter the exception
             shutdown();
             e.printStackTrace();
         }
