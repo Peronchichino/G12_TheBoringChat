@@ -14,6 +14,7 @@ public class ClientApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 750, 600);
         scene.getStylesheets().add(getClass().getResource("client-stylesheet.css").toExternalForm());
         stage.setTitle("The Boring Chat ( ._.)");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
