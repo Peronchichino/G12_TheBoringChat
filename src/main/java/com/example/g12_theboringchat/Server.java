@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import com.example.g12_theboringchat.ClientController;
 
 public class Server implements Runnable{
     private final int PORT = 4711;
@@ -55,6 +56,7 @@ public class Server implements Runnable{
     public void shutdown() {
         try{
             done = true;
+            threadpool.shutdown();
             if(!server.isClosed()){
                 server.close();
             }

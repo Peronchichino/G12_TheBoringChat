@@ -42,6 +42,7 @@ public class Client implements Runnable{
             if(!client.isClosed()){
                 client.close();
             }
+            System.exit(0);
         }catch(IOException e){
             e.printStackTrace();
             //cant do anything about it
@@ -68,5 +69,10 @@ public class Client implements Runnable{
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.run();
     }
 }
