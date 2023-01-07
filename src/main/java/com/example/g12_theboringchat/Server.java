@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server implements Runnable{
-    private int PORT = 4711;
+    private final int PORT = 4711;
     private ArrayList<ConnectionHandler> connections;
     private ServerSocket server;
     private boolean done;
