@@ -1,9 +1,6 @@
 package com.example.g12_theboringchat;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 
@@ -43,9 +40,8 @@ public class Client implements Runnable{
                 client.close();
             }
             System.exit(0);
-        }catch(IOException e){
+        } catch(IOException e){
             e.printStackTrace();
-            //cant do anything about it
         }
     }
 
@@ -53,9 +49,9 @@ public class Client implements Runnable{
 
         @Override
         public void run() {
-            try{
+            try {
                 BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
-                while(!done){
+                while (!done){
                     String msg = inReader.readLine();
                     if(msg.equals("/quit")){
                         out.println(msg);
@@ -65,7 +61,7 @@ public class Client implements Runnable{
                         out.println(msg);
                     }
                 }
-            }catch(IOException e){
+            } catch(IOException e){
                 shutdown();
                 e.printStackTrace();
             }
@@ -76,4 +72,5 @@ public class Client implements Runnable{
         Client client = new Client();
         client.run();
     }
+
 }
