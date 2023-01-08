@@ -118,7 +118,6 @@ public class Server implements Runnable{
 
         public void sendMsg(String message){
             out.println(message);
-
         }
 
         public void shutdownClient(){

@@ -1,5 +1,6 @@
 package com.example.g12_theboringchat;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,7 +20,7 @@ public class ClientController implements Runnable{
     public TextField txt_message;
     @FXML
     TextArea txt_messageArea;
-    Socket client;
+    public Socket client;
     private boolean done;
 
     @Override
@@ -30,23 +31,13 @@ public class ClientController implements Runnable{
             System.out.println(host.getHostAddress());
             System.out.println(host.getHostName());
 
-            client = new Socket(host.getHostAddress(), 9999);
+            client = new Socket("127.0.0.1", 9999);
             System.out.println("Client: connected to " + client.getInetAddress());
         } catch (IOException e) {
             e.getMessage();
             e.printStackTrace();
             System.out.println("Error creating client...");
             shutdown();
-        } finally{
-            try{
-                if(client != null){
-                    System.out.println("Error creating/connecting client");
-                    client.close();
-                    System.exit(0);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 
@@ -69,7 +60,12 @@ public class ClientController implements Runnable{
                         String message = new String(bin);
                         System.out.println("Client: message from server"+message);
 
-                        txt_messageArea.appendText("Client: "+message+"\n");
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                txt_messageArea.appendText("Client: "+message+"\n");
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
