@@ -16,7 +16,6 @@ public class Server implements Runnable{
     private ArrayList<ConnectionHandler> connections;
     private ServerSocket server;
     private boolean done;
-
     private ExecutorService threadpool;
 
     public Server(){
@@ -117,6 +116,7 @@ public class Server implements Runnable{
 
         public void sendMsg(String message){
             out.println(message);
+
         }
 
         public void shutdownClient(){
