@@ -7,29 +7,33 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.example.g12_theboringchat.ClientController;
 
 public class Server implements Runnable{
     private ArrayList<ConnectionHandler> connections;
+    private Iterator<ConnectionHandler> it;
     private ServerSocket server;
-    private boolean done = false;
+    private boolean done;
+
     private ExecutorService threadpool;
 
     public Server(){
         connections = new ArrayList<>();
+        done = false;
     }
 
     @Override
     public void run() {
         try {
-            server = new ServerSocket(4711);
+            server = new ServerSocket(9999);
             threadpool = Executors.newCachedThreadPool();
             System.out.println("Server started, waiting for clients.");
             while(!done){
                 Socket client = server.accept();
                 ConnectionHandler handler = new ConnectionHandler(client);
+                it = connections.iterator();
                 connections.add(handler);
                 threadpool.execute(handler); //threadpool instead of individual threads to make it easier cause of frequent connections
             }
@@ -60,7 +64,6 @@ public class Server implements Runnable{
             for(ConnectionHandler ch : connections){
                 ch.shutdownClient();
             }
-            System.exit(0);
         } catch(IOException e){
             e.printStackTrace();
             System.out.println("Error with server shutdown function...");
@@ -85,7 +88,7 @@ public class Server implements Runnable{
                 //out.println("Hello client"); to send messages to client from server
                 //in.readLine(); get message from the client to server
                 out.println("Please enter nickname: ");
-                nickname = ClientController.txt_message.getText();
+                nickname = in.readLine();
                 System.out.println(nickname + " connected"); //msg to see client is connected
                 broadcast(nickname + " joined the chat");
 
@@ -95,8 +98,7 @@ public class Server implements Runnable{
                         String[] msgSplit = msg.split(" ", 2);
                         if(msgSplit.length == 2){
                             broadcast(nickname+" renamed themselves to "+msgSplit[1]);
-                            //System.out.println(nickname+" renamed themselves to "+msgSplit[1]);
-                            ClientController.txt_messageArea.appendText("SERVER: "+nickname+" renamed themselves to "+msgSplit[1]);
+                            System.out.println(nickname+" renamed themselves to "+msgSplit[1]);
                             nickname = msgSplit[1];
                             out.println("Successfully changed nickname to: "+nickname);
                         } else{
@@ -115,7 +117,8 @@ public class Server implements Runnable{
         }
 
         public void sendMsg(String message){
-            ClientController.txt_messageArea.appendText(message);
+            out.println(message);
+
         }
 
         public void shutdownClient(){

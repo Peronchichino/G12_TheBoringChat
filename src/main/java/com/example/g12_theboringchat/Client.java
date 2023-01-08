@@ -1,6 +1,7 @@
 package com.example.g12_theboringchat;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
 
@@ -13,7 +14,11 @@ public class Client implements Runnable{
     @Override
     public void run() {
         try{
-            Socket client = new Socket("127.0.0.1", 4711);
+            InetAddress host = InetAddress.getLocalHost();
+            System.out.println(host.getHostAddress());
+            System.out.println(host.getHostName());
+
+            Socket client = new Socket(host.getHostAddress(), 4711);
             out = new PrintWriter(client.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 

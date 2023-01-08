@@ -7,67 +7,82 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
 public class ClientController implements Runnable{
     @FXML
     private Button btn_sendMessage;
     @FXML
-    public static TextField txt_message;
+    public TextField txt_message;
     @FXML
-    static
     TextArea txt_messageArea;
-
-    private Socket client;
-    private PrintWriter out;
-    private BufferedReader in;
+    Socket client;
+    private boolean done;
 
     @Override
     public void run() {
+        done = false;
         try {
-            client = new Socket("localhost", 4711);
-            System.out.println("Client: connected to " + client.getInetAddress());
-            out = new PrintWriter(client.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            InetAddress host = InetAddress.getLocalHost();
+            System.out.println(host.getHostAddress());
+            System.out.println(host.getHostName());
 
-            String inMsg;
-            while ((inMsg = in.readLine()) != null) {
-                txt_messageArea.appendText(inMsg);
-            }
+            client = new Socket(host.getHostAddress(), 9999);
+            System.out.println("Client: connected to " + client.getInetAddress());
         } catch (IOException e) {
+            e.getMessage();
             e.printStackTrace();
             System.out.println("Error creating client...");
             shutdown();
+        } finally{
+            try{
+                if(client != null){
+                    System.out.println("Error creating/connecting client");
+                    client.close();
+                    System.exit(0);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     @FXML
     public void btnSendMsg(ActionEvent event) {
+        String msg = txt_message.getText();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(client.isConnected()){
-                    try{
-                        String msg = txt_message.getText();
-                        if(msg.equals("/quit")){
-                            out.println();
-                            shutdown();
-                        } else{
-                            txt_messageArea.appendText("Client: "+msg+"\n");
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        shutdown();
+                try{
+                    while(!done){
+                        OutputStream out = client.getOutputStream();
+                        byte bout[] = msg.getBytes();
+                        out.write(bout);
+
+                        InputStream in = client.getInputStream();
+                        byte bin[] = new byte[msg.length()];
+                        int bytes = in.read(bin);
+                        System.out.println("Client: received "+bytes+" Bytes from server");
+                        String message = new String(bin);
+                        System.out.println("Client: message from server"+message);
+
+                        txt_messageArea.appendText("Client: "+message+"\n");
                     }
-                    txt_message.setText("");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    shutdown();
                 }
             }
         }).start();
     }
     public void shutdown(){
+        done = true;
         try{
-            in.close();
-            out.close();
+//            in.close();
+//            out.close();
             if(!client.isClosed()){
                 client.close();
             }
