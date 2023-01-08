@@ -12,7 +12,6 @@ import java.util.concurrent.Executors;
 import com.example.g12_theboringchat.ClientController;
 
 public class Server implements Runnable{
-    private final int PORT = 4711;
     private ArrayList<ConnectionHandler> connections;
     private ServerSocket server;
     private boolean done = false;
@@ -25,7 +24,7 @@ public class Server implements Runnable{
     @Override
     public void run() {
         try {
-            server = new ServerSocket(PORT);
+            server = new ServerSocket(4711);
             threadpool = Executors.newCachedThreadPool();
             System.out.println("Server started, waiting for clients.");
             while(!done){
