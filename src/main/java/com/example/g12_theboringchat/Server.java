@@ -6,21 +6,20 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server implements Runnable{
-    private ArrayList<ConnectionHandler> connections;
-    private Iterator<ConnectionHandler> it;
+    private ConcurrentHashMap<String, ConnectionHandler> connections;
     private ServerSocket server;
     private boolean done;
 
     private ExecutorService threadpool;
 
     public Server(){
-        connections = new ArrayList<>();
+        connections = new ConcurrentHashMap<>();
         done = false;
     }
 
@@ -33,8 +32,7 @@ public class Server implements Runnable{
             while(!done){
                 Socket client = server.accept();
                 ConnectionHandler handler = new ConnectionHandler(client);
-                it = connections.iterator();
-                connections.add(handler);
+                connections = new ConcurrentHashMap<>();
                 threadpool.execute(handler); //threadpool instead of individual threads to make it easier cause of frequent connections
             }
 
@@ -46,9 +44,13 @@ public class Server implements Runnable{
 
     //broadcast msg from server to all clients
     public void broadcast(String msg){
-        for(ConnectionHandler ch : connections){ //for each loop
+        Iterator<ConnectionHandler> it = connections.values().iterator();
+        while(it.hasNext()){
+            ConnectionHandler ch = it.next();
             if(ch != null){
                 ch.sendMsg(msg);
+            } else {
+                it.remove();
             }
         }
     }
@@ -60,9 +62,6 @@ public class Server implements Runnable{
             threadpool.shutdown();
             if(!server.isClosed()){
                 server.close();
-            }
-            for(ConnectionHandler ch : connections){
-                ch.shutdownClient();
             }
         } catch(IOException e){
             e.printStackTrace();
@@ -87,10 +86,7 @@ public class Server implements Runnable{
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 //out.println("Hello client"); to send messages to client from server
                 //in.readLine(); get message from the client to server
-                out.println("Please enter nickname: ");
-                nickname = in.readLine();
-                System.out.println(nickname + " connected"); //msg to see client is connected
-                broadcast(nickname + " joined the chat");
+                broadcast("Client joined the chat");
 
                 String msg;
                 while((msg = in.readLine()) != null){
@@ -105,10 +101,10 @@ public class Server implements Runnable{
                             out.println("No new nickname was provided.");
                         }
                     } else if(msg.startsWith("/quit")){
-                        broadcast(nickname+" has left the chat");
+                        broadcast("Client has left the chat");
                         shutdownClient();
                     } else {
-                        broadcast(nickname + ": "+msg); //format for the actual messages being sent
+                        broadcast("Client: "+msg); //format for the actual messages being sent
                     }
                 }
             } catch(IOException e){
