@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="600" maxWidth="750" minHeight="600" minWidth="750" prefHeight="600.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.g12_theboringchat.ClientController">
+<AnchorPane maxHeight="600" maxWidth="750" minHeight="600" minWidth="750" prefHeight="600.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.g12_theboringchat.ClientController">
     <children>
         <ScrollPane fx:id="ScrollPane_chats" hmax="800.0" hvalue="800.0" layoutY="3.0" prefHeight="593.0" prefWidth="186.0" style="-fx-background-color: lightgray;" vbarPolicy="ALWAYS" vmax="300.0" vvalue="300.0" />
         <Pane fx:id="msg_btn_cont" layoutX="187.0" prefHeight="600.0" prefWidth="600.0">
             <children>
                 <Button fx:id="btn_sendMessage" layoutX="515.0" layoutY="555.0" onAction="#btnSendMsg" text="&gt;" />
                 <TextField fx:id="txt_message" layoutX="10.0" layoutY="560.0" prefHeight="25.0" prefWidth="500.0" promptText="Enter text..." />
-                <TextArea fx:id="txt_messageArea" mouseTransparent="true" prefHeight="540.0" prefWidth="600.0" />
+                <TextArea fx:id="txt_messageArea" mouseTransparent="true" prefHeight="540.0" prefWidth="563.0" />
             </children>
         </Pane>
     </children>
