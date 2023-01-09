@@ -46,6 +46,7 @@ public class ClientController implements Runnable {
 
     @FXML
     public void initialize() {
+        initialized = true;
         txt_messageArea.setEditable(false);
         workerThread = Executors.newSingleThreadExecutor();
     }
@@ -63,7 +64,7 @@ public class ClientController implements Runnable {
             System.out.println("Client: connected to " + client.getInetAddress());
 
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
+            out = new PrintWriter(client.getOutputStream(), true);
 
             receiveMessages();
         } catch (IOException e) {
@@ -80,8 +81,11 @@ public class ClientController implements Runnable {
             run();
         }
         String msg = txt_message.getText();
+
         workerThread.execute(() -> {
             out.println(msg);
+            out.write(msg);
+            out.flush();
         });
     }
 
@@ -95,8 +99,11 @@ public class ClientController implements Runnable {
                         break;
                     }
                     System.out.println("Client: received messagefrom server: " + message);
+
+                    txt_messageArea.appendText("Client: "+message+"\n");
+
                     Platform.runLater(() -> {
-                        txt_messageArea.appendText("Client: " + message + "\n");
+                        txt_messageArea.appendText("Client: "+ message+"\n");
                     });
                 }
             } catch (IOException e) {
@@ -108,8 +115,6 @@ public class ClientController implements Runnable {
     public void shutdown() {
         done = true;
         try {
-            in.close();
-            out.close();
             if (!client.isClosed()) {
                 client.close();
             }

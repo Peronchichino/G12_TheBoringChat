@@ -1,9 +1,8 @@
 package com.example.g12_theboringchat;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import javafx.scene.chart.PieChart;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Iterator;
@@ -15,7 +14,6 @@ public class Server implements Runnable{
     private ConcurrentHashMap<String, ConnectionHandler> connections;
     private ServerSocket server;
     private boolean done;
-
     private ExecutorService threadpool;
 
     public Server(){
@@ -31,11 +29,11 @@ public class Server implements Runnable{
             System.out.println("Server started, waiting for clients.");
             while(!done){
                 Socket client = server.accept();
+                System.out.println(client.getClass().getSimpleName());
                 ConnectionHandler handler = new ConnectionHandler(client);
                 connections = new ConcurrentHashMap<>();
                 threadpool.execute(handler); //threadpool instead of individual threads to make it easier cause of frequent connections
             }
-
         } catch (Exception e) { //should shutdown no matter the exception
             shutdown();
             e.printStackTrace();
@@ -76,16 +74,16 @@ public class Server implements Runnable{
         private PrintWriter out;
         private String nickname;
 
-        public ConnectionHandler(Socket client){
+        public ConnectionHandler(Socket client) {
             this.client = client;
         }
         @Override
         public void run() {
             try{
-                out = new PrintWriter(client.getOutputStream(), true);
+                out = new PrintWriter(new PrintWriter(client.getOutputStream(), true)); //out = new PrintWriter(new OutputStreamWriter(client.getOutputStream());
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                //out.println("Hello client"); to send messages to client from server
-                //in.readLine(); get message from the client to server
+                out.println("Hello client"); //to send messages to client from server
+                in.readLine(); //get message from the client to server
                 broadcast("Client joined the chat");
 
                 String msg;
@@ -118,9 +116,6 @@ public class Server implements Runnable{
 
         public void shutdownClient(){
             try{
-                in.close();
-                out.close();
-
                 if(!client.isClosed()){
                     client.close();
                 }
