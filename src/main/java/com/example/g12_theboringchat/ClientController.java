@@ -7,11 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.Executor;
@@ -46,6 +42,7 @@ public class ClientController implements Runnable {
 
     @FXML
     public void initialize() {
+        this.run();
         initialized = true;
         txt_messageArea.setEditable(false);
         workerThread = Executors.newSingleThreadExecutor();
@@ -57,18 +54,15 @@ public class ClientController implements Runnable {
         done = false;
         try {
             InetAddress host = InetAddress.getLocalHost();
-            System.out.println(host.getHostAddress());
-            System.out.println(host.getHostName());
 
             client = new Socket("127.0.0.1", 9999);
-            System.out.println("Client: connected to " + client.getInetAddress());
+            System.out.println("Client: connected to " + host.getHostName());
 
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             out = new PrintWriter(client.getOutputStream(), true);
 
             receiveMessages();
         } catch (IOException e) {
-            e.getMessage();
             e.printStackTrace();
             System.out.println("Error creating client...");
             shutdown();
@@ -77,16 +71,12 @@ public class ClientController implements Runnable {
 
     @FXML
     public void btnSendMsg(ActionEvent event) {
-        if(!initialized){ //makes sure that run() gets initialized first
-            run();
-        }
-        String msg = txt_message.getText();
+        String message = txt_message.getText();
+        System.out.println(message);
 
-        workerThread.execute(() -> {
-            out.println(msg);
-            out.write(msg);
-            out.flush();
-        });
+        workerThread.execute(() -> out.println(message));
+
+        txt_message.clear();
     }
 
     private void receiveMessages() {
@@ -94,17 +84,13 @@ public class ClientController implements Runnable {
         receiveExecutor.execute(() -> {
             try {
                 while (!done) {
-                    String message = in.readLine();
-                    if (message == null) {
-                        break;
+                    String message;
+                    while((message = in.readLine()) != null){
+                        System.out.println("Client: received message from server: " + message);
+
+                        txt_messageArea.appendText(message);
+                        //Platform.runLater(() -> txt_messageArea.appendText("Client: "+ message+"\n"));
                     }
-                    System.out.println("Client: received messagefrom server: " + message);
-
-                    txt_messageArea.appendText("Client: "+message+"\n");
-
-                    Platform.runLater(() -> {
-                        txt_messageArea.appendText("Client: "+ message+"\n");
-                    });
                 }
             } catch (IOException e) {
                 e.printStackTrace();

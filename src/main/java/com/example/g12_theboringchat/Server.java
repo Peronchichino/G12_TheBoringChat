@@ -44,7 +44,7 @@ public class Server implements Runnable{
         while(it.hasNext()){
             ConnectionHandler ch = it.next();
             if(ch != null){
-                ch.sendMsg(msg);
+                ch.out.println(msg+"\n");
             } else {
                 it.remove();
             }
@@ -70,38 +70,23 @@ public class Server implements Runnable{
         private Socket client;
         private BufferedReader in;
         private PrintWriter out;
-        private String nickname;
 
-        public ConnectionHandler(Socket client) {
+        public ConnectionHandler(Socket client) throws IOException {
             this.client = client;
+            this.out = new PrintWriter(client.getOutputStream(), true);
+            this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         }
         @Override
         public void run() {
             try{
-                out = new PrintWriter(new PrintWriter(client.getOutputStream(), true)); //out = new PrintWriter(new OutputStreamWriter(client.getOutputStream());
-                in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 out.println("Hello client"); //to send messages to client from server
-                in.readLine(); //get message from the client to server
+                String test = in.readLine(); //get message from the client to server
+                System.out.println(test);
                 broadcast("Client joined the chat");
 
                 String msg;
                 while((msg = in.readLine()) != null){
-                    if(msg.startsWith("/nick ")){
-                        String[] msgSplit = msg.split(" ", 2);
-                        if(msgSplit.length == 2){
-                            broadcast(nickname+" renamed themselves to "+msgSplit[1]);
-                            System.out.println(nickname+" renamed themselves to "+msgSplit[1]);
-                            nickname = msgSplit[1];
-                            out.println("Successfully changed nickname to: "+nickname);
-                        } else{
-                            out.println("No new nickname was provided.");
-                        }
-                    } else if(msg.startsWith("/quit")){
-                        broadcast("Client has left the chat");
-                        shutdownClient();
-                    } else {
-                        broadcast("Client: "+msg); //format for the actual messages being sent
-                    }
+                    broadcast(msg+"broadcast");
                 }
             } catch(IOException e){
                 shutdownClient();
@@ -109,7 +94,7 @@ public class Server implements Runnable{
         }
 
         public void sendMsg(String message){
-            out.println(message);
+            out.println(message+"\n");
         }
 
         public void shutdownClient(){
