@@ -75,21 +75,26 @@ public class ClientController implements Runnable {
         System.out.println(message);
 
         workerThread.execute(() -> out.println(message));
+        out.flush();
+
+        if(message.startsWith("/quit")){
+            shutdown();
+        }
 
         txt_message.clear();
     }
 
-    private void receiveMessages() {
+    public void receiveMessages() {
         Executor receiveExecutor = Executors.newSingleThreadExecutor();
         receiveExecutor.execute(() -> {
             try {
                 while (!done) {
                     String message;
                     while((message = in.readLine()) != null){
-                        System.out.println("Client: received message from server: " + message);
+                        System.out.println("Message from server: " + message);
 
                         txt_messageArea.appendText(message);
-                        //Platform.runLater(() -> txt_messageArea.appendText("Client: "+ message+"\n"));
+                        //Platform.runLater(() -> txt_messageArea.appendText(message +"\n"));
                     }
                 }
             } catch (IOException e) {
@@ -106,7 +111,7 @@ public class ClientController implements Runnable {
             }
             System.exit(0);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getMessage();
             // can't do anything about it
         }
     }
