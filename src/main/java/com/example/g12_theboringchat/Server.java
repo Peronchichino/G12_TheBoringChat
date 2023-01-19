@@ -28,7 +28,7 @@ public class Server implements Runnable{
                 Socket client = server.accept();
                 System.out.println(client.getClass().getSimpleName());
                 ConnectionHandler handler = new ConnectionHandler(client);
-                connections = new LinkedBlockingQueue<>();
+                //connections = new LinkedBlockingQueue<>();
                 threadpool.execute(handler); //threadpool instead of individual threads to make it easier cause of frequent connections
             }
         } catch (Exception e) { //should shutdown no matter the exception
