@@ -38,12 +38,10 @@ public class Server implements Runnable{
     }
 
     //broadcast msg from server to all clients
-    public void broadcast(String msg){
-        Iterator<ConnectionHandler> it = connections.iterator();
-        while(it.hasNext()){
-            ConnectionHandler ch = it.next();
-            if(ch != null){
-                ch.out.println(msg+"\n");
+    public void broadcast(String msg, ConnectionHandler sender){
+        for(ConnectionHandler ch : connections){
+            if(ch != null && ch != sender){
+                ch.out.println(msg);
             }
         }
     }
@@ -75,16 +73,18 @@ public class Server implements Runnable{
         @Override
         public void run() {
             try{
+                connections.offer(this);
                 out = new PrintWriter(client.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 out.println("Please enter a nickname:");
                 name = in.readLine();
-                System.out.println("SERVER: "+name+" has joined the chat!");
-                broadcast("SERVER: "+name+" has joined the chat!");
+                System.out.println(name+" connected");
+                broadcast(name+" has joined the chat!", this);
 
                 String msg;
                 while((msg = in.readLine()) != null){
                     if(msg.startsWith("/quit")){
+                        broadcast(name+"left the chat", this);
                         shutdownClient();
                     } else if(msg.startsWith("/nick ")){
                         String[] messageSplit = msg.split(" ",2);
@@ -96,7 +96,8 @@ public class Server implements Runnable{
                             out.println("No nickname provided.");
                         }
                     }else {
-                        broadcast(msg+"broadcast");
+                        System.out.println(name+": "+msg);
+                        broadcast(name+": "+msg, this);
                     }
                 }
             } catch(IOException e){
@@ -105,6 +106,7 @@ public class Server implements Runnable{
         }
 
         public void shutdownClient(){
+            connections.remove(this);
             try{
                 if(!client.isClosed()){
                     client.close();

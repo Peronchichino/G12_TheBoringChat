@@ -73,15 +73,17 @@ public class ClientController implements Runnable {
     public void btnSendMsg(ActionEvent event) {
         String message = txt_message.getText();
         System.out.println(message);
+        if(message != null){
+            workerThread.execute(() -> out.println(message));
+            out.flush();
 
-        workerThread.execute(() -> out.println(message));
-        out.flush();
+            txt_messageArea.appendText(message+"\n");
+            if(message.startsWith("/quit")){
+                shutdown();
+            }
 
-        if(message.startsWith("/quit")){
-            shutdown();
+            txt_message.clear();
         }
-
-        txt_message.clear();
     }
 
     public void receiveMessages() {
@@ -93,7 +95,7 @@ public class ClientController implements Runnable {
                     while((message = in.readLine()) != null){
                         System.out.println("Message from server: " + message);
 
-                        txt_messageArea.appendText(message);
+                        txt_messageArea.appendText(message+"\n");
                         //Platform.runLater(() -> txt_messageArea.appendText(message +"\n"));
                     }
                 }

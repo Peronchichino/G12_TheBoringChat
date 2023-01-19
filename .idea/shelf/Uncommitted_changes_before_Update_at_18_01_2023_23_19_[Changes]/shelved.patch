@@ -1,0 +1,57 @@
+Index: src/main/resources/com/example/g12_theboringchat/client-view.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<?import javafx.scene.control.Button?>\r\n<?import javafx.scene.control.ScrollPane?>\r\n<?import javafx.scene.control.TextArea?>\r\n<?import javafx.scene.control.TextField?>\r\n<?import javafx.scene.layout.AnchorPane?>\r\n<?import javafx.scene.layout.Pane?>\r\n\r\n<AnchorPane maxHeight=\"600\" maxWidth=\"750\" minHeight=\"600\" minWidth=\"750\" prefHeight=\"600.0\" prefWidth=\"750.0\" xmlns=\"http://javafx.com/javafx/19\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller=\"com.example.g12_theboringchat.ClientController\">\r\n    <children>\r\n        <ScrollPane fx:id=\"ScrollPane_chats\" hmax=\"800.0\" hvalue=\"800.0\" layoutY=\"3.0\" prefHeight=\"593.0\" prefWidth=\"186.0\" style=\"-fx-background-color: lightgray;\" vbarPolicy=\"ALWAYS\" vmax=\"300.0\" vvalue=\"300.0\" />\r\n        <Pane fx:id=\"msg_btn_cont\" layoutX=\"187.0\" prefHeight=\"600.0\" prefWidth=\"600.0\">\r\n            <children>\r\n                <Button fx:id=\"btn_sendMessage\" layoutX=\"515.0\" layoutY=\"555.0\" onAction=\"#btnSendMsg\" text=\"&gt;\" />\r\n                <TextField fx:id=\"txt_message\" layoutX=\"10.0\" layoutY=\"560.0\" prefHeight=\"25.0\" prefWidth=\"500.0\" promptText=\"Enter text...\" />\r\n                <TextArea fx:id=\"txt_messageArea\" mouseTransparent=\"true\" prefHeight=\"540.0\" prefWidth=\"563.0\" />\r\n            </children>\r\n        </Pane>\r\n    </children>\r\n</AnchorPane>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/com/example/g12_theboringchat/client-view.fxml b/src/main/resources/com/example/g12_theboringchat/client-view.fxml
+--- a/src/main/resources/com/example/g12_theboringchat/client-view.fxml	(revision 7a3e569757b6a670f10b9a53ac3744d33ac74ea1)
++++ b/src/main/resources/com/example/g12_theboringchat/client-view.fxml	(date 1673367588669)
+@@ -7,7 +7,7 @@
+ <?import javafx.scene.layout.AnchorPane?>
+ <?import javafx.scene.layout.Pane?>
+ 
+-<AnchorPane maxHeight="600" maxWidth="750" minHeight="600" minWidth="750" prefHeight="600.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.g12_theboringchat.ClientController">
++<AnchorPane maxHeight="600" maxWidth="750" minHeight="600" minWidth="750" prefHeight="600.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.g12_theboringchat.ClientController">
+     <children>
+         <ScrollPane fx:id="ScrollPane_chats" hmax="800.0" hvalue="800.0" layoutY="3.0" prefHeight="593.0" prefWidth="186.0" style="-fx-background-color: lightgray;" vbarPolicy="ALWAYS" vmax="300.0" vvalue="300.0" />
+         <Pane fx:id="msg_btn_cont" layoutX="187.0" prefHeight="600.0" prefWidth="600.0">
+Index: src/main/java/com/example/g12_theboringchat/Server.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.g12_theboringchat;\r\n\r\nimport java.io.*;\r\nimport java.net.ServerSocket;\r\nimport java.net.Socket;\r\nimport java.util.Iterator;\r\nimport java.util.concurrent.ConcurrentHashMap;\r\nimport java.util.concurrent.ExecutorService;\r\nimport java.util.concurrent.Executors;\r\n\r\npublic class Server implements Runnable{\r\n    private ConcurrentHashMap<String, ConnectionHandler> connections;\r\n    private ServerSocket server;\r\n    private boolean done;\r\n    private ExecutorService threadpool;\r\n\r\n    public Server(){\r\n        connections = new ConcurrentHashMap<>();\r\n        done = false;\r\n    }\r\n\r\n    @Override\r\n    public void run() {\r\n        try {\r\n            server = new ServerSocket(9999);\r\n            threadpool = Executors.newCachedThreadPool();\r\n            System.out.println(\"Server started, waiting for clients.\");\r\n            while(!done){\r\n                Socket client = server.accept();\r\n                System.out.println(client.getClass().getSimpleName());\r\n                ConnectionHandler handler = new ConnectionHandler(client);\r\n                connections = new ConcurrentHashMap<>();\r\n                threadpool.execute(handler); //threadpool instead of individual threads to make it easier cause of frequent connections\r\n            }\r\n        } catch (Exception e) { //should shutdown no matter the exception\r\n            shutdown();\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    //broadcast msg from server to all clients\r\n    public void broadcast(String msg){\r\n        Iterator<ConnectionHandler> it = connections.values().iterator();\r\n        while(it.hasNext()){\r\n            ConnectionHandler ch = it.next();\r\n            if(ch != null){\r\n                ch.out.println(msg+\"\\n\");\r\n            } else {\r\n                it.remove();\r\n            }\r\n        }\r\n    }\r\n\r\n    //shutdown server\r\n    public void shutdown() {\r\n        try{\r\n            done = true;\r\n            threadpool.shutdown();\r\n            if(!server.isClosed()){\r\n                server.close();\r\n            }\r\n        } catch(IOException e){\r\n            e.printStackTrace();\r\n            System.out.println(\"Error with server shutdown function...\");\r\n            //ignore, cant do anything about it\r\n        }\r\n    }\r\n\r\n    public class ConnectionHandler implements Runnable{\r\n        private Socket client;\r\n        private BufferedReader in;\r\n        private PrintWriter out;\r\n\r\n        public ConnectionHandler(Socket client) throws IOException {\r\n            this.client = client;\r\n            this.out = new PrintWriter(client.getOutputStream(), true);\r\n            this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));\r\n        }\r\n        @Override\r\n        public void run() {\r\n            try{\r\n                out.println(\"Hello client\"); //to send messages to client from server\r\n                String test = in.readLine(); //get message from the client to server\r\n                System.out.println(test);\r\n                broadcast(\"Client joined the chat\");\r\n\r\n                String msg;\r\n                while((msg = in.readLine()) != null){\r\n                    broadcast(msg+\"broadcast\");\r\n                }\r\n            } catch(IOException e){\r\n                shutdownClient();\r\n            }\r\n        }\r\n\r\n        public void sendMsg(String message){\r\n            out.println(message+\"\\n\");\r\n        }\r\n\r\n        public void shutdownClient(){\r\n            try{\r\n                if(!client.isClosed()){\r\n                    client.close();\r\n                }\r\n            } catch(IOException e){\r\n                e.printStackTrace();\r\n                System.out.println(\"Error with client shutdown function\");\r\n                //ignore\r\n            }\r\n        }\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        Server server = new Server();\r\n        server.run();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/g12_theboringchat/Server.java b/src/main/java/com/example/g12_theboringchat/Server.java
+--- a/src/main/java/com/example/g12_theboringchat/Server.java	(revision 7a3e569757b6a670f10b9a53ac3744d33ac74ea1)
++++ b/src/main/java/com/example/g12_theboringchat/Server.java	(date 1674080360722)
+@@ -44,6 +44,7 @@
+         while(it.hasNext()){
+             ConnectionHandler ch = it.next();
+             if(ch != null){
++                ch.sendMsg(msg+"\n");
+                 ch.out.println(msg+"\n");
+             } else {
+                 it.remove();
+Index: src/main/java/com/example/g12_theboringchat/ClientApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.g12_theboringchat;\r\n\r\nimport javafx.application.Application;\r\nimport javafx.fxml.FXMLLoader;\r\nimport javafx.scene.Parent;\r\nimport javafx.scene.Scene;\r\nimport javafx.stage.Stage;\r\n\r\nimport java.io.IOException;\r\n\r\npublic class ClientApplication extends Application {\r\n    @Override\r\n    public void start(Stage stage) throws IOException {\r\n        Parent root = FXMLLoader.load(getClass().getResource(\"client-view.fxml\"));\r\n        Scene scene = new Scene(root, 750, 600);\r\n        scene.getStylesheets().add(getClass().getResource(\"client-stylesheet.css\").toExternalForm());\r\n        stage.setTitle(\"The Boring Chat ( ._.)\");\r\n        stage.setResizable(false);\r\n        stage.setScene(scene);\r\n        stage.show();\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        ClientController cont = new ClientController();\r\n        cont.run();\r\n        launch();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/g12_theboringchat/ClientApplication.java b/src/main/java/com/example/g12_theboringchat/ClientApplication.java
+--- a/src/main/java/com/example/g12_theboringchat/ClientApplication.java	(revision 7a3e569757b6a670f10b9a53ac3744d33ac74ea1)
++++ b/src/main/java/com/example/g12_theboringchat/ClientApplication.java	(date 1673367588683)
+@@ -21,8 +21,6 @@
+     }
+ 
+     public static void main(String[] args) {
+-        ClientController cont = new ClientController();
+-        cont.run();
+         launch();
+     }
+ }
+\ No newline at end of file
