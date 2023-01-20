@@ -1,7 +1,7 @@
 # The Boring Chat
 - Lukas Buchmayer (ic21b128@technikum-wien.at) [Peronchichino]
 - Christof Pichler (ic21b133@technikum-wien.at) [christofpichler]
-- Kamil Bober (ic22b044@technikum-wien.at) [KaM1los]
+- Kamil Bober (ic22b044@technikum-wien.at) [KaM1los/KamilBober1]
 
 # -- Issue Tracker --
 - Must Have Features
