@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1d4c530b-4a92-46ef-8d31-7665ff1181af" name="Changes" comment="worked on 1-message but (no fix), nickname feature added">
+    <list default="true" id="1d4c530b-4a92-46ef-8d31-7665ff1181af" name="Changes" comment="fix: 1msg per client, issue: one client cant see msg">
+      <change afterPath="$PROJECT_DIR$/.idea/cssdialects.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/g12_theboringchat/ClientApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/g12_theboringchat/ClientApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/g12_theboringchat/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/g12_theboringchat/ClientController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/g12_theboringchat/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/g12_theboringchat/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/g12_theboringchat/client-stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/g12_theboringchat/client-stylesheet.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/g12_theboringchat/client-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/g12_theboringchat/client-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,18 +33,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/lukas/Downloads/one-dark-theme-5.7.2.zip",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/lukas/IdeaProjects/Maintainance_Monitor_G11&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.ClientApplication">
     <configuration name="ClientApplication" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.g12_theboringchat.ClientApplication" />
@@ -87,7 +93,8 @@
       <option name="presentableId" value="Default" />
       <updated>1673293925597</updated>
       <workItem from="1673293927395" duration="8000000" />
-      <workItem from="1673974677656" duration="9104000" />
+      <workItem from="1673974677656" duration="15621000" />
+      <workItem from="1674312884692" duration="630000" />
     </task>
     <task id="LOCAL-00001" summary="big scare, big fix">
       <created>1673294359723</created>
@@ -103,7 +110,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674086286867</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fix: 1msg per client, issue: one client cant see msg">
+      <created>1674090555335</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1674090555335</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -123,6 +137,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="big scare, big fix" />
     <MESSAGE value="worked on 1-message but (no fix), nickname feature added" />
-    <option name="LAST_COMMIT_MESSAGE" value="worked on 1-message but (no fix), nickname feature added" />
+    <MESSAGE value="fix: 1msg per client, issue: one client cant see msg" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: 1msg per client, issue: one client cant see msg" />
   </component>
 </project>
