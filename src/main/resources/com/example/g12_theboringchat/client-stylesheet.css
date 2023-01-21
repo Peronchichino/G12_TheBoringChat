@@ -1,3 +1,6 @@
+/* to use any css you would use for webpages u have to change it
+   to something with the -fx-whatever, its weird but doable*/
+
 /*Color palette
     background: #23272a (dark)
     background 2: #2c2f33 (not as dark)
@@ -9,8 +12,7 @@
     green: #57F287
  */
 
-/* Buttons */
-#btn_sendMessage{
+.button{
     -fx-background-color: #646464;
     -fx-background-radius: 100%;
     -fx-min-height: 35px;
@@ -25,36 +27,26 @@
     -fx-text-alignment: center;
 }
 
-#btn_sendMessage:hover{
+.button:hover{
     -fx-background-color: #5865F2;
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
 }
-
-/* Containers/Panes */
-#msg_btn_cont, #title_cont{
+#msg_btn_cont{
     -fx-background-color: #2c2f33;
 }
 
-/*Text Area and message field*/
 #txt_message{
     -fx-background-color: #ffffff;
 }
 
-#txt_messageArea{
+.text-area{
     text-area-background: #2c2f33;
     -fx-text-fill: #ffffff;
 }
 
-#txt_messageArea .content{
+.text-area .content{
     -fx-background-color: text-area-background;
     -fx-text-fill: #ffffff;
-}
-
-/* Top title/label */
-#titleLabel{
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
 }
 
