@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.example.g12_theboringchat","l":"ClientApplication"},{"p":"com.example.g12_theboringchat","l":"ClientController"},{"p":"com.example.g12_theboringchat","l":"Server.ConnectionHandler"},{"p":"com.example.g12_theboringchat","l":"Server"}];updateSearchResults();

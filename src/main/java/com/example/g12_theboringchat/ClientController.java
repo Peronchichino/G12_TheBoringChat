@@ -1,6 +1,5 @@
 package com.example.g12_theboringchat;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +17,18 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The JavaFX controller and the client socket.
+ *
+ * <p>
+ *     This is the JavaF controller called by ClientApplication.java and connects to the Server.java socket running locally.
+ * </p>
+ *
+ * This class gets automatically called when running ClientApplication.java.
+ *
+ * @author Lukas Buchmayer, Bobar Kamil, Christof Pichler
+ */
+
 public class ClientController implements Runnable {
     @FXML
     private Button btn_sendMessage;
@@ -32,16 +43,25 @@ public class ClientController implements Runnable {
     private PrintWriter out;
     private boolean initialized = false;
 
+    /**
+     * ClientController constructor that initializes the workerThread.
+     */
     public ClientController() {
         workerThread = new ThreadPoolExecutor(
-                1, // core pool size
-                1, // maximum pool size
-                0L, // keep-alive time
-                TimeUnit.MILLISECONDS, // time unit
-                new LinkedBlockingQueue<>() // work queue
+                1,
+                1,
+                0L,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>()
         );
     }
 
+    /**
+     * Method used to initialize the ClientController correctly.
+     * <p>
+     *     Makes sure that the run function is called properly.
+     * </p>
+     */
     @FXML
     public void initialize() {
         this.run();
@@ -50,6 +70,9 @@ public class ClientController implements Runnable {
         workerThread = Executors.newSingleThreadExecutor();
     }
 
+    /**
+     * The run method used to connect the client socket to the server socket.
+     */
     @Override
     public void run() {
         initialized = true;
@@ -71,6 +94,11 @@ public class ClientController implements Runnable {
         }
     }
 
+    /**
+     * Method that sends a message when the send button is clicked.
+     *
+     * @param event On-click.
+     */
     @FXML
     public void btnSendMsg(ActionEvent event) {
         String message = txt_message.getText();
@@ -88,6 +116,9 @@ public class ClientController implements Runnable {
         }
     }
 
+    /**
+     * Function that allows the client socket to receive messages from the server by running the messages in a thread.
+     */
     public void receiveMessages() {
         Executor receiveExecutor = Executors.newSingleThreadExecutor();
         receiveExecutor.execute(() -> {
@@ -105,6 +136,13 @@ public class ClientController implements Runnable {
             }
         });
     }
+
+    /**
+     * Shutdown method for the client socket.
+     * <p>
+     *     Gets called whenever an exception is thrown, an error occurs, or the client sends the message "/quit".
+     * </p>
+     */
     public void shutdown() {
         done = true;
         try {
@@ -114,10 +152,14 @@ public class ClientController implements Runnable {
             System.exit(0);
         } catch (IOException e) {
             e.getMessage();
-            // can't do anything about it
         }
     }
 
+    /**
+     * Function that allows a client to download the current chat to an external .txt file.
+     *
+     * @param actionEvent On-click.
+     */
     @FXML
     public void btnDownload(ActionEvent actionEvent) {
         ObservableList<CharSequence> paragraph = txt_messageArea.getParagraphs();

@@ -7,17 +7,28 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.concurrent.*;
 
+/**
+ * This class is the Server socket which handles the client sockets and their output streams.
+ *
+ * @author Lukas Buchmayer, Bobar Kamil, Christof Pichler
+ */
 public class Server implements Runnable{
     private LinkedBlockingQueue<ConnectionHandler> connections;
     private ServerSocket server;
     private boolean done;
     private ExecutorService threadpool;
 
+    /**
+     * Server constructor that initializes Client list.
+     */
     public Server(){
         connections = new LinkedBlockingQueue<>();
         done = false;
     }
 
+    /**
+     * The run method that starts the server socket and accepts connecting clients.
+     */
     @Override
     public void run() {
         try {
@@ -36,6 +47,13 @@ public class Server implements Runnable{
         }
     }
 
+    /**
+     * Method that sends a message to all connected clients/sockets.
+     *
+     * @param msg Message to be sent.
+     * @param sender Client socket that sends the message.
+     *               @see ConnectionHandler
+     */
     public void broadcast(String msg, ConnectionHandler sender){
         for(ConnectionHandler ch : connections){
             if(ch != null  && ch != sender){
@@ -44,6 +62,9 @@ public class Server implements Runnable{
         }
     }
 
+    /**
+     * The shutdown function for the server if any exceptions or errors occur.
+     */
     public void shutdown() {
         try{
             done = true;
@@ -57,15 +78,29 @@ public class Server implements Runnable{
         }
     }
 
+    /**
+     * Class used to handle all connected clients.
+     * <p>
+     *     A nested class of Server.java which is created as an object for each connected client socket.
+     * </p>
+     */
     public class ConnectionHandler implements Runnable{
         private Socket client;
         private BufferedReader in;
         private PrintWriter out;
         private String name;
 
+        /**
+         * Constructor for ConnectionHandler.java which is used for calling it as an object for each connected client socket.
+         * @param client The corresponding socket in the LinkedBlockingQueue/Connections.
+         */
         public ConnectionHandler(Socket client) throws IOException {
             this.client = client;
         }
+
+        /**
+         * Run method for threading.
+         */
         @Override
         public void run() {
             try{
@@ -101,6 +136,9 @@ public class Server implements Runnable{
             }
         }
 
+        /**
+         * Method to force shutdown a connected socket is an exception is thrown, errors occurs or client wants to leave the chat.
+         */
         public void shutdownClient(){
             connections.remove(this);
             try{
@@ -114,6 +152,9 @@ public class Server implements Runnable{
         }
     }
 
+    /**
+     * Main function that starts the server socket.
+     */
     public static void main(String[] args) {
         Server server = new Server();
         server.run();
