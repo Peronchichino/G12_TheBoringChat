@@ -12,9 +12,9 @@ public class ClientApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("client-view.fxml"));
-        Scene scene = new Scene(root, 750, 600);
+        Scene scene = new Scene(root, 560, 518);
         scene.getStylesheets().add(getClass().getResource("client-stylesheet.css").toExternalForm());
-        stage.setTitle("The Boring Chat ( ._.)");
+        stage.setTitle("G12 ODE Projekt: Chat Room");
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();

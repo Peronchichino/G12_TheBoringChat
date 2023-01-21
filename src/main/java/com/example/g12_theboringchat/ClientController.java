@@ -1,6 +1,7 @@
 package com.example.g12_theboringchat;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,6 +11,7 @@ import javafx.scene.control.TextField;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -77,7 +79,7 @@ public class ClientController implements Runnable {
             workerThread.execute(() -> out.println(message));
             out.flush();
 
-            txt_messageArea.appendText(message+"\n");
+            txt_messageArea.appendText("Me: "+message+"\n");
             if(message.startsWith("/quit")){
                 shutdown();
             }
@@ -93,10 +95,8 @@ public class ClientController implements Runnable {
                 while (!done) {
                     String message;
                     while((message = in.readLine()) != null){
-                        System.out.println("Message from server: " + message);
-
+                        System.out.println("Server: " + message);
                         txt_messageArea.appendText(message+"\n");
-                        //Platform.runLater(() -> txt_messageArea.appendText(message +"\n"));
                     }
                 }
             } catch (IOException e) {
@@ -115,6 +115,26 @@ public class ClientController implements Runnable {
         } catch (IOException e) {
             e.getMessage();
             // can't do anything about it
+        }
+    }
+
+    @FXML
+    public void btnDownload(ActionEvent actionEvent) {
+        ObservableList<CharSequence> paragraph = txt_messageArea.getParagraphs();
+        Iterator<CharSequence> iter = paragraph.iterator();
+        File archive = new File("TheBoringChatArchive.txt");
+        try{
+            BufferedWriter fw = new BufferedWriter(new FileWriter(archive));
+            while(iter.hasNext())
+            {
+                CharSequence seq = iter.next();
+                fw.append(seq);
+                fw.newLine();
+            }
+            fw.flush();
+            fw.close();
+        } catch(IOException e){
+            e.printStackTrace();
         }
     }
 }

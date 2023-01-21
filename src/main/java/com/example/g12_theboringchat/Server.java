@@ -28,25 +28,22 @@ public class Server implements Runnable{
                 Socket client = server.accept();
                 System.out.println(client.getClass().getSimpleName());
                 ConnectionHandler handler = new ConnectionHandler(client);
-                //connections = new LinkedBlockingQueue<>();
-                threadpool.execute(handler); //threadpool instead of individual threads to make it easier cause of frequent connections
+                threadpool.execute(handler);
             }
-        } catch (Exception e) { //should shutdown no matter the exception
+        } catch (Exception e) {
             shutdown();
             e.printStackTrace();
         }
     }
 
-    //broadcast msg from server to all clients
     public void broadcast(String msg, ConnectionHandler sender){
         for(ConnectionHandler ch : connections){
-            if(ch != null && ch != sender){
+            if(ch != null  && ch != sender){
                 ch.out.println(msg);
             }
         }
     }
 
-    //shutdown server
     public void shutdown() {
         try{
             done = true;
@@ -57,7 +54,6 @@ public class Server implements Runnable{
         } catch(IOException e){
             e.printStackTrace();
             System.out.println("Error with server shutdown function...");
-            //ignore, cant do anything about it
         }
     }
 
@@ -76,9 +72,9 @@ public class Server implements Runnable{
                 connections.offer(this);
                 out = new PrintWriter(client.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                out.println("Welcome to the chat!");
                 out.println("Please enter a nickname:");
                 name = in.readLine();
-                System.out.println(name+" connected");
                 broadcast(name+" has joined the chat!", this);
 
                 String msg;
@@ -114,7 +110,6 @@ public class Server implements Runnable{
             } catch(IOException e){
                 e.printStackTrace();
                 System.out.println("Error with client shutdown function");
-                //ignore
             }
         }
     }
