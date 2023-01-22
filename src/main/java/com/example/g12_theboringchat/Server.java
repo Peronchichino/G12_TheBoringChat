@@ -10,7 +10,11 @@ import java.util.concurrent.*;
 /**
  * This class is the Server socket which handles the client sockets and their output streams.
  *
- * @author Lukas Buchmayer, Bobar Kamil, Christof Pichler
+ * <p>
+ *     The server class has a nested class called ConnectionHandler which is called as a thread and handles a specified connected client.
+ * </p>
+ *
+ * @author Lukas Buchmayer, Bober Kamil, Christof Pichler
  */
 public class Server implements Runnable{
     private LinkedBlockingQueue<ConnectionHandler> connections;

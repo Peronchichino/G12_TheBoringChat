@@ -9,16 +9,23 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * This class calls the ClientController.java class and is essentially the GUI.
+ * When run, starts the client GUI.
+ * <p>
+ *     This class is essentially the main() of the client. It calls the ClientController and uses it as its back-end essentially.
+ *     One cannot function without the other.
+ * </p>
  *
- * @author Lukas Buchmayer, Bobar Kamil, Christof Pichler
+ * @author Lukas Buchmayer, Bober Kamil, Christof Pichler
  */
 public class ClientApplication extends Application {
     /**
      * Function that starts the Client.
      * <p>
      *     Calls ClientController.java and creates the chat GUI for the client.
+     *     The way the stage is called is different here because we implemented threading in ClientController.java.
+     *     We call the stage with Parent instead of the FXML loader because FXML loader caused some thread initialization errors.
      * </p>
+     *
      * @param stage the primary stage for this application, onto which the application scene can be set.
      * Applications may create other stages, if needed, but they will not be primary stages.
      */

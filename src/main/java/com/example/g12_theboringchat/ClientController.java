@@ -22,11 +22,12 @@ import java.util.concurrent.TimeUnit;
  *
  * <p>
  *     This is the JavaF controller called by ClientApplication.java and connects to the Server.java socket running locally.
+ *     The class uses many different threads and most actions are triggered by the press of a button.
  * </p>
  *
  * This class gets automatically called when running ClientApplication.java.
  *
- * @author Lukas Buchmayer, Bobar Kamil, Christof Pichler
+ * @author Lukas Buchmayer, Bober Kamil, Christof Pichler
  */
 
 public class ClientController implements Runnable {
