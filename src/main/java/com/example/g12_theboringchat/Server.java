@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.CookieHandler;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.*;
 
@@ -21,6 +22,7 @@ public class Server implements Runnable{
     private ServerSocket server;
     private boolean done;
     private ExecutorService threadpool;
+    private ArrayList<String> members;
 
     /**
      * Server constructor that initializes Client list.
@@ -39,6 +41,7 @@ public class Server implements Runnable{
             server = new ServerSocket(9999);
             threadpool = Executors.newCachedThreadPool();
             System.out.println("Server started, waiting for clients.");
+            members = new ArrayList<>();
             while(!done){
                 Socket client = server.accept();
                 System.out.println(client.getClass().getSimpleName());
@@ -115,21 +118,35 @@ public class Server implements Runnable{
                 out.println("Please enter a nickname:");
                 name = in.readLine();
                 broadcast(name+" has joined the chat!", this);
+                members.add(name);
 
                 String msg;
                 while((msg = in.readLine()) != null){
                     if(msg.startsWith("/quit")){
                         broadcast(name+"left the chat", this);
+                        int i = members.indexOf(name);
+                        members.remove(i);
                         shutdownClient();
-                    } else if(msg.startsWith("/nick ")){
-                        String[] messageSplit = msg.split(" ",2);
-                        if(messageSplit.length == 2){
-                            System.out.println(name+" renamed themselves to "+messageSplit[1]);
+                    } else if(msg.startsWith("/nick ")) {
+                        String[] messageSplit = msg.split(" ", 2);
+                        if (messageSplit.length == 2) {
+                            System.out.println(name + " renamed themselves to " + messageSplit[1]);
+                            int i = members.indexOf(name);
+                            members.remove(i);
                             name = messageSplit[1];
-                            out.println("Successfully changed nickname to "+name);
-                        } else{
+                            members.add(name);
+                            out.println("Successfully changed nickname to " + name);
+                        } else {
                             out.println("No nickname provided.");
                         }
+                    }else if(msg.startsWith("/showon")){
+                        StringBuffer sb = new StringBuffer();
+                        for(String s : members){
+                            sb.append(s);
+                            sb.append(", ");
+                        }
+                        String allMembers = sb.toString();
+                        out.println("SERVER: all online members {"+allMembers+"}");
                     }else {
                         System.out.println(name+": "+msg);
                         broadcast(name+": "+msg, this);
