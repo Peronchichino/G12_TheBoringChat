@@ -117,20 +117,21 @@ public class Server implements Runnable{
                 out.println("Welcome to the chat!");
                 out.println("Please enter a nickname:");
                 name = in.readLine();
+                out.println("Welcome to the chat "+name);
                 broadcast(name+" has joined the chat!", this);
                 members.add(name);
 
                 String msg;
                 while((msg = in.readLine()) != null){
                     if(msg.startsWith("/quit")){
-                        broadcast(name+"left the chat", this);
+                        broadcast(name+" left the chat", this);
                         int i = members.indexOf(name);
                         members.remove(i);
                         shutdownClient();
                     } else if(msg.startsWith("/nick ")) {
                         String[] messageSplit = msg.split(" ", 2);
                         if (messageSplit.length == 2) {
-                            System.out.println(name + " renamed themselves to " + messageSplit[1]);
+                            broadcast(name + " renamed themselves to " + messageSplit[1], this);
                             int i = members.indexOf(name);
                             members.remove(i);
                             name = messageSplit[1];
